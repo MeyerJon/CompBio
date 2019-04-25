@@ -11,3 +11,8 @@
 - Evo. Systems. modelling:
     - Visualise model over timesteps
     - Population(n) -> SIM (Rules + Strats) -> Population(n + 1)
+    
+## Tech:
+- Matpltlib
+- Pyglet?
+- Tkinter?
