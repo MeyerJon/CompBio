@@ -1,8 +1,9 @@
 class Population:
 
-    def __init__(self, name, strategy, size=0):
+    def __init__(self, name, strategy, options, size=0):
         self.name = name
         self.strategy = strategy
+        self.options = options
         self.size = size
 
 
@@ -12,16 +13,24 @@ class Replicator:
         self.payoff_matrix = payoff_matrix
         self.populations = initial_populations
 
-    def fitness_function(self, target_pop):
+    def fitness_function(self, target_pop_ix):
+        """
+            Fitness function as given in Bever (2014).
+            Returns the fitness of the target population (given by index) in the current model.
+        """
 
-        fitness = sum([pop.size * self.payoff_matrix.getOutcome(target_pop.strategy, pop.strategy)[0] for pop in self.populations])
+        target_pop = self.populations[target_pop_ix]
+        other_pop = self.populations[not target_pop_ix]
+
+        fitness = other_pop.size * self.payoff_matrix.getOutcome(target_pop.strategy, other_pop.options[0])[target_pop_ix] + \
+                  (1 - other_pop.size) * self.payoff_matrix.getOutcome(target_pop.strategy, other_pop.options[1])[target_pop_ix]
         return fitness
         
     def calculate_one_step(self, populations):
 
         pop_fitnesses = list()
-        for pop in populations:
-            pop_fitnesses.append(self.fitness_function(pop))
+        for pop_ix in range(len(populations)):
+            pop_fitnesses.append(self.fitness_function(pop_ix))
         avg_fitness = sum([self.populations[i].size * pop_fitnesses[i] for i in range(len(self.populations))])
 
         for i in range(len(populations)):
@@ -53,8 +62,8 @@ if __name__ == "__main__":
 
     pm = PayoffMatrix.PayoffMatrix(options1, options2, matrix)
 
-    doves = Population("Doves", "A1", size=0.8)
-    hawks = Population("Hawks", "B2", size=0.2)
+    doves = Population("Doves", "A1", options1, size=0.8)
+    hawks = Population("Hawks", "B2", options2, size=0.2)
 
     repl = Replicator(pm, [doves, hawks])
 

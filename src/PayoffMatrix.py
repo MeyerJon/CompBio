@@ -69,7 +69,10 @@ class PayoffMatrix:
         return stable_strategy
 
     def getOutcome(self, p1_choice, p2_choice):
-        return self.matrix[(p1_choice, p2_choice)]
+        if (p1_choice, p2_choice) in self.matrix.keys():
+            return self.matrix[(p1_choice, p2_choice)]
+        else:
+            return self.matrix[(p2_choice, p1_choice)]
 
     def __str__(self):
         pass
