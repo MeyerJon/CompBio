@@ -22,8 +22,12 @@ class Replicator:
         target_pop = self.populations[target_pop_ix]
         other_pop = self.populations[not target_pop_ix]
 
-        fitness = other_pop.size * self.payoff_matrix.getOutcome(target_pop.strategy, other_pop.options[0])[target_pop_ix] + \
-                  (1 - other_pop.size) * self.payoff_matrix.getOutcome(target_pop.strategy, other_pop.options[1])[target_pop_ix]
+        other_strat = other_pop.options[0] if other_pop.options[0] != other_pop.strategy else other_pop.options[1]
+
+        fitness = other_pop.size * self.payoff_matrix.getOutcome(target_pop.strategy, other_pop.strategy)[target_pop_ix] + \
+                  (1 - other_pop.size) * self.payoff_matrix.getOutcome(target_pop.strategy, other_strat)[target_pop_ix]
+
+
         return fitness
         
     def calculate_one_step(self, populations):
