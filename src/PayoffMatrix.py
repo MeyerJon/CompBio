@@ -1,6 +1,7 @@
 class PayoffMatrix:
-    def __init__(self, options, matrix):
-        self.options = options
+    def __init__(self, options1, options2, matrix):
+        self.options1 = options1
+        self.options2 = options2
         self.matrix = matrix
 
     # Calcuates
@@ -11,11 +12,13 @@ class PayoffMatrix:
             # check if given choice is best in the
             outcome = self.getOutcome(p1_choice, p2_choice)
 
-            options = self.options[:]
+
 
             if vertical:
+                options = self.options1[:]
                 options.remove(choice1)
             else:
+                options = self.options2[:]
                 options.remove(choice2)
 
             for option in options:
@@ -29,8 +32,8 @@ class PayoffMatrix:
             return True
 
         # Go over each pair of options
-        for p1_choice in self.options:
-            for p2_choice in self.options:
+        for p1_choice in self.options1:
+            for p2_choice in self.options2:
 
                 # Check if current options are best for player 1 and player 2 respectively
                 if best_option(p1_choice, p2_choice, True) and best_option(p1_choice, p2_choice, False):
@@ -45,7 +48,7 @@ class PayoffMatrix:
             # check if given choice is best in the
             outcome = self.getOutcome(p1_choice, p2_choice)
 
-            options = self.options[:]
+            options = self.options1[:]
 
             options.remove(choice1)
 
@@ -78,50 +81,53 @@ class PayoffMatrix:
 def testEquilibrium():
     def test_RPS():
         matrix = dict()
-        options = ['R', 'P', 'S']
+        options1 = ['R1', 'P1', 'S1']
+        options2 = ['R2', 'P2', 'S2']
 
-        matrix[('R', 'R')] = (0, 0)
-        matrix[('R', 'P')] = (-1, 1)
-        matrix[('R', 'S')] = (1, -1)
-        matrix[('P', 'R')] = (1, -1)
-        matrix[('P', 'P')] = (0, 0)
-        matrix[('P', 'S')] = (-1, 1)
-        matrix[('S', 'R')] = (-1, 1)
-        matrix[('S', 'P')] = (1, -1)
-        matrix[('S', 'S')] = (0, 0)
+        matrix[('R1', 'R2')] = (0, 0)
+        matrix[('R1', 'P2')] = (-1, 1)
+        matrix[('R1', 'S2')] = (1, -1)
+        matrix[('P1', 'R2')] = (1, -1)
+        matrix[('P1', 'P2')] = (0, 0)
+        matrix[('P1', 'S2')] = (-1, 1)
+        matrix[('S1', 'R2')] = (-1, 1)
+        matrix[('S1', 'P2')] = (1, -1)
+        matrix[('S1', 'S2')] = (0, 0)
 
-        pm = PayoffMatrix(options, matrix)
+        pm = PayoffMatrix(options1, options2, matrix)
 
         print('Test RPS: Equilibrium = ', pm.getNashEquilibrium())
         print('Expected: \t\t\t\t', [])
 
     def test_Hunt():
         matrix = dict()
-        options = ['Hunt stag', 'Hunt rabbit']
+        options1 = ['Hunt stag1', 'Hunt rabbit1']
+        options2 = ['Hunt stag2', 'Hunt rabbit2']
 
-        matrix[('Hunt stag', 'Hunt stag')] = (2, 2)
-        matrix[('Hunt stag', 'Hunt rabbit')] = (0, 1)
-        matrix[('Hunt rabbit', 'Hunt stag')] = (1, 0)
-        matrix[('Hunt rabbit', 'Hunt rabbit')] = (1, 1)
+        matrix[('Hunt stag1', 'Hunt stag2')] = (2, 2)
+        matrix[('Hunt stag1', 'Hunt rabbit2')] = (0, 1)
+        matrix[('Hunt rabbit1', 'Hunt stag2')] = (1, 0)
+        matrix[('Hunt rabbit1', 'Hunt rabbit2')] = (1, 1)
 
-        pm = PayoffMatrix(options, matrix)
+        pm = PayoffMatrix(options1, options2, matrix)
 
         print('Test Hunt: Equilibrium =', pm.getNashEquilibrium())
-        print('Expected: \t\t\t\t', [('Hunt stag', 'Hunt stag'), ('Hunt rabbit', 'Hunt rabbit')])
+        print('Expected: \t\t\t\t', [('Hunt stag1', 'Hunt stag2'), ('Hunt rabbit1', 'Hunt rabbit2')])
 
     def test_ESS():
         matrix = dict()
-        options = ['A', 'B']
+        options1 = ['A1', 'B1']
+        options2 = ['A2', 'B2']
 
-        matrix[('A', 'A')] = (2, 2)
-        matrix[('A', 'B')] = (1, 2)
-        matrix[('B', 'A')] = (2, 1)
-        matrix[('B', 'B')] = (2, 2)
+        matrix[('A1', 'A2')] = (2, 2)
+        matrix[('A1', 'B2')] = (1, 2)
+        matrix[('B1', 'A2')] = (2, 1)
+        matrix[('B1', 'B2')] = (2, 2)
 
-        pm = PayoffMatrix(options, matrix)
+        pm = PayoffMatrix(options1, options2, matrix)
 
         print('Test ESS: Equilibrium = ', pm.getESS())
-        print('Expected: \t\t\t\t', ['B'])
+        print('Expected: \t\t\t\t', ['B1'])
 
     test_RPS()
     test_Hunt()

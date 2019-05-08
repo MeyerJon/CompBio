@@ -43,19 +43,19 @@ if __name__ == "__main__":
     import PayoffMatrix
 
     matrix = dict()
-    options = ['H', 'D']
+    options1 = ['A1', 'B1']
+    options2 = ['A2', 'B2']
 
-    matrix[('H', 'H')] = (-1, -1)
-    matrix[('H', 'D')] = (2, 0)
-    matrix[('D', 'H')] = (0, 2)
-    matrix[('D', 'D')] = (1, 1)
+    matrix[('A1', 'A2')] = (2, 2)
+    matrix[('A1', 'B2')] = (1, 2)
+    matrix[('B1', 'A2')] = (2, 1)
+    matrix[('B1', 'B2')] = (2, 2)
 
-    pm = PayoffMatrix.PayoffMatrix(options, matrix)
+    pm = PayoffMatrix.PayoffMatrix(options1, options2, matrix)
 
-    doves = Population("Doves", "D", size=0.8)
-    hawks = Population("Hawks", "H", size=0.2)
+    doves = Population("Doves", "A1", size=0.8)
+    hawks = Population("Hawks", "B2", size=0.2)
 
     repl = Replicator(pm, [doves, hawks])
 
-    repl.calculate_steps()       
-        
+    repl.calculate_steps(n_steps=100)
