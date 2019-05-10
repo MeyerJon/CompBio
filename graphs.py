@@ -114,14 +114,15 @@ def population_dynamic(repl):
     x = range(0, config.timesteps)
     y_c = [repl.populations[0].groups["c"]]
     y_D = [repl.populations[1].groups["D"]]
-    for _ in range(len(x)-1):
+    for _ in range(config.timesteps-1):
         repl.populations = repl.calculate_one_step(repl.populations)
         y_c.append(repl.populations[0].groups["c"])
         y_D.append(repl.populations[1].groups["D"])
     
     plt.plot(x, y_c, x, y_D)
     plt.legend(["Cheaters", "Discriminators"])
-    plt.show()
+    #plt.show()
+    plt.savefig("pop_dynamic.svg")
 
 
 if __name__ == "__main__":

@@ -38,4 +38,4 @@ partner_groups = {
 
 
 # Simulation parameters
-timesteps = 100
+timesteps = 250
