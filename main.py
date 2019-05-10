@@ -13,7 +13,9 @@ if __name__ == "__main__":
 
     repl = ReplicatorFormula.Replicator(pm, [partner, host])
 
-    print("Partner fitness: {}".format(repl.fitness_function(1)))
-    print("Host fitness: {}".format(repl.fitness_function(0)))  
+    repl.calculate_steps(config.timesteps)
+
+    print("Partner: {}".format(repl.populations[0].groups))
+    print("Host: {}".format(repl.populations[1].groups))  
     
 

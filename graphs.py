@@ -106,10 +106,29 @@ def partner_competition(repl):
     plt.show()
 
 
+def population_dynamic(repl):
+    """
+        Plots discriminators vs cheaters over time
+    """
+
+    x = range(0, config.timesteps)
+    y_c = [repl.populations[0].groups["c"]]
+    y_D = [repl.populations[1].groups["D"]]
+    for _ in range(len(x)-1):
+        repl.populations = repl.calculate_one_step(repl.populations)
+        y_c.append(repl.populations[0].groups["c"])
+        y_D.append(repl.populations[1].groups["D"])
+    
+    plt.plot(x, y_c, x, y_D)
+    plt.legend(["Cheaters", "Discriminators"])
+    plt.show()
+
+
 if __name__ == "__main__":
 
-    host_tradeoff(get_repl())
-    host_competition(get_repl())
-    partner_tradeoff(get_repl())
-    partner_competition(get_repl())
+    #host_tradeoff(get_repl())
+    #host_competition(get_repl())
+    #partner_tradeoff(get_repl())
+    #partner_competition(get_repl())
+    population_dynamic(get_repl())
 

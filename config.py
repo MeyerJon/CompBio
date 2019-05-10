@@ -27,11 +27,15 @@ matrix[('c', 'G')] = (b, -K)
 
 # Groups
 host_groups = {
-                "D": 1,
-                "G": 0
+                "D": 0.5,
+                "G": 0.5
               }
 
 partner_groups = {
-                    "m": 1,
-                    "c": 0
+                    "m": 0.5,
+                    "c": 0.5
                  }
+
+
+# Simulation parameters
+timesteps = 100
