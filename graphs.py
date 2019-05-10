@@ -1,6 +1,19 @@
 import matplotlib.pyplot as plt
+import numpy as np
 from src import ReplicatorFormula, PayoffMatrix
 import config
+
+
+def get_repl():
+    pm = PayoffMatrix.PayoffMatrix(config.host_strategies, config.partner_strategies, config.matrix)
+
+    host = ReplicatorFormula.Population("Host", config.host_strategy, config.host_strategies, config.host_size)
+    partner = ReplicatorFormula.Population("Partner", config.partner_strategy, config.partner_strategies,
+                                           config.partner_size)
+
+    repl = ReplicatorFormula.Replicator(pm, [partner, host])
+
+    return repl
 
 
 def host_tradeoff(repl):
@@ -17,7 +30,8 @@ def host_tradeoff(repl):
         repl.populations[0].strategy = strat
         for r in x:
             repl.payoff_matrix.matrix[('m', 'D')] = ((config.b - config.z), (config.B / (1 + r)))
-            repl.payoff_matrix.matrix[('c', 'D')] = ((config.b / (1 + config.alpha * r)), (-config.K / (1 + config.beta * r)))
+            repl.payoff_matrix.matrix[('c', 'D')] = (
+            (config.b / (1 + config.alpha * r)), (-config.K / (1 + config.beta * r)))
             fitness = repl.fitness_function(1)
             y.append(fitness)
         plt.plot(x, y)
@@ -25,11 +39,11 @@ def host_tradeoff(repl):
     plt.show()
 
 
-def host_competition(replicator):
+def host_competition(repl):
     pass
 
 
-def partner_tradeoff(replicator):
+def partner_tradeoff(repl):
     repl.populations[1].strategy = "D"
     x = range(0, 6)
     for strat in ["c", "m"]:
@@ -46,17 +60,29 @@ def partner_tradeoff(replicator):
     plt.show()
 
 
-def partner_competition(replicator):
-    pass
+def partner_competition(repl):
+    """
+        Displays plot for discriminator host
+        x-axis: host discrimination
+        y-axis: fitness values
+    """
+
+    repl.populations[1].strategy = "D"
+    x = np.linspace(0, 1, 50)
+    for strat in ["c", "m"]:
+        y = list()
+        repl.populations[0].strategy = strat
+        for r in x:
+            repl.populations[1].size = r
+            fitness = repl.fitness_function(0)
+            y.append(fitness)
+        plt.plot(x, y)
+        plt.ylim(0, config.b)
+    plt.legend(["c", "m"])
+    plt.show()
 
 
 if __name__ == "__main__":
-    pm = PayoffMatrix.PayoffMatrix(config.host_strategies, config.partner_strategies, config.matrix)
 
-    host = ReplicatorFormula.Population("Host", config.host_strategy, config.host_strategies, config.host_size)
-    partner = ReplicatorFormula.Population("Partner", config.partner_strategy, config.partner_strategies,
-                                           config.partner_size)
-
-    repl = ReplicatorFormula.Replicator(pm, [partner, host])
-
-    host_tradeoff(repl)
+    host_tradeoff(get_repl())
+    partner_competition(get_repl())
