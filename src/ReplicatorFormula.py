@@ -24,8 +24,14 @@ class Replicator:
 
         other_strat = other_pop.options[0] if other_pop.options[0] != other_pop.strategy else other_pop.options[1]
 
-        fitness = other_pop.size * self.payoff_matrix.getOutcome(target_pop.strategy, other_pop.strategy)[target_pop_ix] + \
-                  (1 - other_pop.size) * self.payoff_matrix.getOutcome(target_pop.strategy, other_strat)[target_pop_ix]
+        o1_size = other_pop.size
+        o2_size = 1-other_pop.size
+
+        r1 = self.payoff_matrix.getOutcome(target_pop.strategy, other_pop.strategy)[target_pop_ix]
+        r2 = self.payoff_matrix.getOutcome(target_pop.strategy, other_strat)[target_pop_ix]
+
+
+        fitness = o1_size * r1 + o2_size * r2
 
 
         return fitness

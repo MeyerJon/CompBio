@@ -24,7 +24,7 @@ partner_strategies = ["m", "c"]
 
 matrix[('m', 'D')] = ((b - z), (B / (1 + r)))
 matrix[('m', 'G')] = ((b - z), B)
-matrix[('c', 'D')] = ((b / (1 + alpha * r)), (-K / (1 + beta * r)))
+matrix[('c', 'D')] = ((b / (1 + (alpha * r))), (-K / (1 + (beta * r))))
 matrix[('c', 'G')] = (b, -K)
 
 

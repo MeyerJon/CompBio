@@ -2,10 +2,11 @@ import matplotlib.pyplot as plt
 import numpy as np
 from src import ReplicatorFormula, PayoffMatrix
 import config
+import copy
 
 
 def get_repl():
-    pm = PayoffMatrix.PayoffMatrix(config.host_strategies, config.partner_strategies, config.matrix)
+    pm = PayoffMatrix.PayoffMatrix(config.host_strategies, config.partner_strategies, copy.deepcopy(config.matrix))
 
     host = ReplicatorFormula.Population("Host", config.host_strategy, config.host_strategies, config.host_size)
     partner = ReplicatorFormula.Population("Partner", config.partner_strategy, config.partner_strategies,
@@ -72,12 +73,17 @@ def partner_competition(repl):
     for strat in ["c", "m"]:
         y = list()
         repl.populations[0].strategy = strat
-        for r in x:
-            repl.populations[1].size = r
+        for D in x:
+            repl.populations[1].size = D
             fitness = repl.fitness_function(0)
             y.append(fitness)
         plt.plot(x, y)
-        plt.ylim(0, config.b)
+        plt.ylim(0, config.b+1)
+
+    b_z = config.b - config.z
+    D_  = config.z / config.b * ((1 + config.alpha * config.r) / (config.alpha * config.r))
+    plt.plot(D_, b_z, '.')
+
     plt.legend(["c", "m"])
     plt.show()
 
