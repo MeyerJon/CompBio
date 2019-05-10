@@ -19,17 +19,19 @@ r = r_host_discrimination
 # Payoff Matrix
 matrix = dict()
 
-host_strategies = ["D", "G"]
-partner_strategies = ["m", "c"]
-
 matrix[('m', 'D')] = ((b - z), (B / (1 + r)))
 matrix[('m', 'G')] = ((b - z), B)
 matrix[('c', 'D')] = ((b / (1 + (alpha * r))), (-K / (1 + (beta * r))))
 matrix[('c', 'G')] = (b, -K)
 
 
-# Parameters
-host_strategy = "G"
-partner_strategy = "c"
-host_size = 1
-partner_size = 1
+# Groups
+host_groups = {
+                "D": 1,
+                "G": 0
+              }
+
+partner_groups = {
+                    "m": 1,
+                    "c": 0
+                 }
