@@ -25,7 +25,7 @@ def host_tradeoff(repl):
     """
 
     repl.populations[1].strategy = "D"
-    x = range(0, 6)
+    x = np.linspace(0, 6, 50)
     for strat in ["c", "m"]:
         y = list()
         repl.populations[0].strategy = strat
@@ -41,12 +41,29 @@ def host_tradeoff(repl):
 
 
 def host_competition(repl):
-    pass
+    x = np.linspace(0, 1, 50)
+    repl.populations[0].strategy = "m"
+    for strat in ["D", "G"]:
+        y = list()
+        repl.populations[1].strategy = strat
+        for m in x:
+            repl.populations[0].size = m
+            fitness = repl.fitness_function(1)
+            y.append(fitness)
+        plt.plot(x, y)
+        plt.ylim(-config.K, config.B)
+    plt.legend(["discriminator", "giver"])
+
+    m_cross_x = (config.beta * config.K * (1 + config.r)) / ((config.B * (1 + config.beta * config.r)) + (config.beta * config.K * (1 + config.r)))
+    m_cross_y = (-config.K) / (1 + (config.beta * config.r))
+    plt.plot(m_cross_x, m_cross_y, '.')
+
+    plt.show()
 
 
 def partner_tradeoff(repl):
     repl.populations[1].strategy = "D"
-    x = range(0, 6)
+    x = np.linspace(0, 6, 50)
     for strat in ["c", "m"]:
         y = list()
         repl.populations[0].strategy = strat
@@ -90,5 +107,8 @@ def partner_competition(repl):
 
 if __name__ == "__main__":
 
-    host_tradeoff(get_repl())
-    partner_competition(get_repl())
+    #host_tradeoff(get_repl())
+    host_competition(get_repl())
+    #partner_tradeoff(get_repl())
+    #partner_competition(get_repl())
+
