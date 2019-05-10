@@ -54,7 +54,9 @@ def host_competition(repl):
     plt.legend(["discriminator", "giver"])
 
     m_cross_x = (config.beta * config.K * (1 + config.r)) / ((config.B * (1 + config.beta * config.r)) + (config.beta * config.K * (1 + config.r)))
-    m_cross_y = (-config.K) / (1 + (config.beta * config.r))
+    repl.populations[1].strategy = "D"
+    repl.populations[0].size = m_cross_x
+    m_cross_y = repl.fitness_function(1)
     plt.plot(m_cross_x, m_cross_y, '.')
 
     plt.show()
@@ -101,8 +103,8 @@ def partner_competition(repl):
 
 if __name__ == "__main__":
 
-    #host_tradeoff(get_repl())
+    host_tradeoff(get_repl())
     host_competition(get_repl())
-    #partner_tradeoff(get_repl())
-    #partner_competition(get_repl())
+    partner_tradeoff(get_repl())
+    partner_competition(get_repl())
 
