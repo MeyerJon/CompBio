@@ -111,14 +111,18 @@ def population_dynamic(repl):
         Plots discriminators vs cheaters over time
     """
 
-    x = range(0, config.timesteps)
+    x = np.linspace(0, config.timestep * config.iterations, config.iterations)
     y_c = [repl.populations[0].groups["c"]]
+    y_m = [repl.populations[0].groups["m"]]
     y_D = [repl.populations[1].groups["D"]]
-    for _ in range(config.timesteps-1):
+    y_G = [repl.populations[1].groups["G"]]
+    for _ in range(config.iterations-1):
         repl.populations = repl.calculate_one_step(repl.populations)
         y_c.append(repl.populations[0].groups["c"])
         y_D.append(repl.populations[1].groups["D"])
-    
+        y_m.append(repl.populations[0].groups["m"])
+        y_G.append(repl.populations[1].groups["G"])
+
     plt.plot(x, y_c, x, y_D)
     plt.legend(["Cheaters", "Discriminators"])
     #plt.show()

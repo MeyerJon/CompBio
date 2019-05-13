@@ -1,3 +1,5 @@
+import config
+
 class Population:
 
     def __init__(self, name, groups):
@@ -41,14 +43,14 @@ class Replicator:
         pop1_g1 = list(self.populations[0].groups.keys())[0]
         pop1_g2 = list(self.populations[0].groups.keys())[1]
         dg1 = self.populations[0].groups[pop1_g1] * self.populations[0].groups[pop1_g2] * (pop1_group_fitnesses[pop1_g1] - pop1_group_fitnesses[pop1_g2])
-        self.populations[0].groups[pop1_g1] += dg1
-        self.populations[0].groups[pop1_g2] -= dg1
+        self.populations[0].groups[pop1_g1] += (dg1 * config.timestep)
+        self.populations[0].groups[pop1_g2] -= (dg1 * config.timestep)
 
         pop2_g1 = list(self.populations[1].groups.keys())[0]
         pop2_g2 = list(self.populations[1].groups.keys())[1]
         dg1 = self.populations[1].groups[pop2_g1] * self.populations[1].groups[pop2_g2] * (pop2_group_fitnesses[pop2_g1] - pop2_group_fitnesses[pop2_g2])
-        self.populations[1].groups[pop2_g1] += dg1
-        self.populations[1].groups[pop2_g2] -= dg1
+        self.populations[1].groups[pop2_g1] += (dg1 * config.timestep)
+        self.populations[1].groups[pop2_g2] -= (dg1 * config.timestep)
 
         return populations
 
