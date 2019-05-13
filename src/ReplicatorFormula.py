@@ -31,14 +31,14 @@ class Replicator:
         pop1_group_fitnesses = dict()
         pop1_avg_fitness = 0
         for group in self.populations[0].groups.keys():
-            pop1_group_fitnesses[group] = self.populations[0].groups[group] * self.fitness_function(0, group)
-            pop1_avg_fitness += pop1_group_fitnesses[group]
+            pop1_group_fitnesses[group] = self.fitness_function(0, group)
+            pop1_avg_fitness += (self.populations[0].groups[group] * pop1_group_fitnesses[group])
         
         pop2_group_fitnesses = dict()
         pop2_avg_fitness = 0
         for group in self.populations[1].groups.keys():
-            pop2_group_fitnesses[group] = self.populations[1].groups[group] * self.fitness_function(1, group)
-            pop2_avg_fitness += pop2_group_fitnesses[group]
+            pop2_group_fitnesses[group] = self.fitness_function(1, group)
+            pop2_avg_fitness += (self.populations[1].groups[group] * pop2_group_fitnesses[group])
 
         pop1_g1 = list(self.populations[0].groups.keys())[0]
         pop1_g2 = list(self.populations[0].groups.keys())[1]
