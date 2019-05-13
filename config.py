@@ -26,16 +26,19 @@ matrix[('c', 'G')] = (b, -K)
 
 
 # Groups
+m_osc = (beta * K * (1 + r)) / ((B * (1 + beta * r)) + (beta * K * (1 + r)))
+D_osc = (z / b) * ((1 + alpha * r) / (alpha * r))
 host_groups = {
-                "D": 0.5,
-                "G": 0.5
+                "D": D_osc + 0.05,
+                "G": 1 - D_osc - 0.05
               }
 
 partner_groups = {
-                    "m": 0.5,
-                    "c": 0.5
+                    "m": m_osc + 0.05,
+                    "c": 1 - m_osc - 0.05
                  }
 
 
 # Simulation parameters
-timesteps = 250
+iterations = 50000
+timestep = 1.0 / 2000

@@ -37,7 +37,9 @@ def host_tradeoff(repl):
             y.append(fitness)
         plt.plot(x, y)
     plt.legend(["c", "m"])
-    plt.show()
+    #plt.show()
+    plt.savefig("host_tradeoff.svg")
+    plt.clf()
 
 
 def host_competition(repl):
@@ -61,8 +63,9 @@ def host_competition(repl):
     repl.populations[0].groups["c"] = 1 - m_cross_x
     m_cross_y = repl.fitness_function(1, "D")
     plt.plot(m_cross_x, m_cross_y, '.')
-
-    plt.show()
+    #plt.show()
+    plt.savefig("host_comp.svg")
+    plt.clf()
 
 
 def partner_tradeoff(repl):
@@ -82,7 +85,9 @@ def partner_tradeoff(repl):
             y.append(fitness)
         plt.plot(x, y)
     plt.legend(["c", "m"])
-    plt.show()
+    #plt.show()
+    plt.savefig("partner_tradeoff.svg")
+    plt.clf()
 
 
 def partner_competition(repl):
@@ -108,7 +113,9 @@ def partner_competition(repl):
     plt.plot(D_, b_z, '.')
 
     plt.legend(["c", "m"])
-    plt.show()
+    #plt.show()
+    plt.savefig("partner_comp.svg")
+    plt.clf()
 
 
 def population_dynamic(repl):
@@ -116,25 +123,39 @@ def population_dynamic(repl):
         Plots discriminators vs cheaters over time
     """
 
-    x = range(0, config.timesteps)
+    x = np.linspace(0, config.timestep * config.iterations, config.iterations)
     y_c = [repl.populations[0].groups["c"]]
+    y_m = [repl.populations[0].groups["m"]]
     y_D = [repl.populations[1].groups["D"]]
-    for _ in range(config.timesteps-1):
+    y_G = [repl.populations[1].groups["G"]]
+
+    m_osc = (config.beta * config.K * (1 + config.r)) / ((config.B * (1 + config.beta * config.r)) + (config.beta * config.K * (1 + config.r)))
+    D_osc = (config.z / config.b) * ((1 + config.alpha * config.r) / (config.alpha * config.r))
+    m_line = [m_osc] * config.iterations
+    D_line = [D_osc] * config.iterations
+
+    for _ in range(config.iterations-1):
         repl.populations = repl.calculate_one_step(repl.populations)
         y_c.append(repl.populations[0].groups["c"])
         y_D.append(repl.populations[1].groups["D"])
-    
-    plt.plot(x, y_c, x, y_D)
-    plt.legend(["Cheaters", "Discriminators"])
+        y_m.append(repl.populations[0].groups["m"])
+        y_G.append(repl.populations[1].groups["G"])
+
+
+
+
+    plt.plot(x, y_m, x, y_D, x, m_line, x, D_line)
+    plt.legend(["Mutualists", "Discriminators", "Isocline m", "Isocline D"])
     #plt.show()
     plt.savefig("pop_dynamic.svg")
+    plt.clf()
 
 
 if __name__ == "__main__":
 
-    #host_tradeoff(get_repl())
-    #host_competition(get_repl())
-    #partner_tradeoff(get_repl())
-    #partner_competition(get_repl())
+    host_tradeoff(get_repl())
+    host_competition(get_repl())
+    partner_tradeoff(get_repl())
+    partner_competition(get_repl())
     population_dynamic(get_repl())
 
