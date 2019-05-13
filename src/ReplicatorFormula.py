@@ -1,10 +1,8 @@
 class Population:
 
-    def __init__(self, name, strategy, options, size=0):
+    def __init__(self, name, groups):
         self.name = name
-        self.strategy = strategy
-        self.options = options
-        self.size = size
+        self.groups = groups
 
 
 class Replicator:
@@ -13,38 +11,44 @@ class Replicator:
         self.payoff_matrix = payoff_matrix
         self.populations = initial_populations
 
-    def fitness_function(self, target_pop_ix):
+    def fitness_function(self, target_pop_ix, target_pop_strat):
         """
             Fitness function as given in Bever (2014).
             Returns the fitness of the target population (given by index) in the current model.
         """
 
-        target_pop = self.populations[target_pop_ix]
         other_pop = self.populations[not target_pop_ix]
-
-        other_strat = other_pop.options[0] if other_pop.options[0] != other_pop.strategy else other_pop.options[1]
-
-        o1_size = other_pop.size
-        o2_size = 1-other_pop.size
-
-        r1 = self.payoff_matrix.getOutcome(target_pop.strategy, other_pop.strategy)[target_pop_ix]
-        r2 = self.payoff_matrix.getOutcome(target_pop.strategy, other_strat)[target_pop_ix]
-
-
-        fitness = o1_size * r1 + o2_size * r2
-
+        fitness = 0
+        for group in other_pop.groups.keys():
+            fitness += other_pop.groups[group] * self.payoff_matrix.getOutcome(target_pop_strat, group)[target_pop_ix]
 
         return fitness
         
     def calculate_one_step(self, populations):
 
-        pop_fitnesses = list()
-        for pop_ix in range(len(populations)):
-            pop_fitnesses.append(self.fitness_function(pop_ix))
-        avg_fitness = sum([self.populations[i].size * pop_fitnesses[i] for i in range(len(self.populations))])
+        pop1_group_fitnesses = dict()
+        pop1_avg_fitness = 0
+        for group in self.populations[0].groups.keys():
+            pop1_group_fitnesses[group] = self.populations[0].groups[group] * self.fitness_function(0, group)
+            pop1_avg_fitness += pop1_group_fitnesses[group]
+        
+        pop2_group_fitnesses = dict()
+        pop2_avg_fitness = 0
+        for group in self.populations[1].groups.keys():
+            pop2_group_fitnesses[group] = self.populations[1].groups[group] * self.fitness_function(1, group)
+            pop2_avg_fitness += pop2_group_fitnesses[group]
 
-        for i in range(len(populations)):
-            self.populations[i].size = self.populations[i].size * (pop_fitnesses[i] / avg_fitness)
+        pop1_g1 = list(self.populations[0].groups.keys())[0]
+        pop1_g2 = list(self.populations[0].groups.keys())[1]
+        dg1 = self.populations[0].groups[pop1_g1] * self.populations[0].groups[pop1_g2] * (pop1_group_fitnesses[pop1_g1] - pop1_group_fitnesses[pop1_g2])
+        self.populations[0].groups[pop1_g1] += dg1
+        self.populations[0].groups[pop1_g2] -= dg1
+
+        pop2_g1 = list(self.populations[1].groups.keys())[0]
+        pop2_g2 = list(self.populations[1].groups.keys())[1]
+        dg1 = self.populations[1].groups[pop2_g1] * self.populations[1].groups[pop2_g2] * (pop2_group_fitnesses[pop2_g1] - pop2_group_fitnesses[pop2_g2])
+        self.populations[1].groups[pop2_g1] += dg1
+        self.populations[1].groups[pop2_g2] -= dg1
 
         return populations
 
@@ -52,9 +56,6 @@ class Replicator:
 
         for i in range(n_steps):
             self.populations = self.calculate_one_step(self.populations)
-            print(f"Populations at timestep {i}:")
-            for pop in self.populations:
-                print(f"\t -{pop.name}: {pop.size}")
 
 
 if __name__ == "__main__":
@@ -72,9 +73,8 @@ if __name__ == "__main__":
 
     pm = PayoffMatrix.PayoffMatrix(options1, options2, matrix)
 
-    doves = Population("Doves", "A1", options1, size=0.8)
-    hawks = Population("Hawks", "B2", options2, size=0.2)
+    doves = Population("Animals", {"Hawks": 0.2, "Doves": 0.8})
 
-    repl = Replicator(pm, [doves, hawks])
+    repl = Replicator(pm, [doves])
 
     repl.calculate_steps(n_steps=100)
