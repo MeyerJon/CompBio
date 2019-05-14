@@ -129,11 +129,17 @@ def population_dynamic(repl):
     y_D = [repl.populations[1].groups["D"]]
     y_G = [repl.populations[1].groups["G"]]
 
+    d_m = []
+    d_D = []
+
     m_osc = (config.beta * config.K * (1 + config.r)) / ((config.B * (1 + config.beta * config.r)) + (config.beta * config.K * (1 + config.r)))
     D_osc = (config.z / config.b) * ((1 + config.alpha * config.r) / (config.alpha * config.r))
     m_line = [m_osc] * config.iterations
     D_line = [D_osc] * config.iterations
 
+
+    prev_m = repl.populations[0].groups["m"]
+    prev_D = repl.populations[1].groups["D"]
     for _ in range(config.iterations-1):
         repl.populations = repl.calculate_one_step(repl.populations)
         y_c.append(repl.populations[0].groups["c"])
@@ -147,6 +153,7 @@ def population_dynamic(repl):
     plt.plot(x, y_m, x, y_D, x, m_line, x, D_line)
     plt.legend(["Mutualists", "Discriminators", "Isocline m", "Isocline D"])
     #plt.show()
+    plt.ylim(0, 1)
     plt.savefig("pop_dynamic.svg")
     plt.clf()
 

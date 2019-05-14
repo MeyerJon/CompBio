@@ -1,7 +1,7 @@
 # Parameter values
 B_host_mutualism_benefit = 5
 b_partner_mutualism_benefit = 5
-z_partner_mutualism_cost = 2
+z_partner_mutualism_cost = 1
 K_host_association_cost = 2
 r_host_discrimination = 2
 alpha = 1

@@ -1,5 +1,6 @@
 import config
 
+
 class Population:
 
     def __init__(self, name, groups):
@@ -25,32 +26,34 @@ class Replicator:
             fitness += other_pop.groups[group] * self.payoff_matrix.getOutcome(target_pop_strat, group)[target_pop_ix]
 
         return fitness
-        
+
     def calculate_one_step(self, populations):
 
         pop1_group_fitnesses = dict()
-        pop1_avg_fitness = 0
+        #pop1_avg_fitness = 0
         for group in self.populations[0].groups.keys():
             pop1_group_fitnesses[group] = self.fitness_function(0, group)
-            pop1_avg_fitness += (self.populations[0].groups[group] * pop1_group_fitnesses[group])
-        
+            #pop1_avg_fitness += (self.populations[0].groups[group] * pop1_group_fitnesses[group])
+
         pop2_group_fitnesses = dict()
-        pop2_avg_fitness = 0
+        #pop2_avg_fitness = 0
         for group in self.populations[1].groups.keys():
             pop2_group_fitnesses[group] = self.fitness_function(1, group)
-            pop2_avg_fitness += (self.populations[1].groups[group] * pop2_group_fitnesses[group])
+            #pop2_avg_fitness += (self.populations[1].groups[group] * pop2_group_fitnesses[group])
 
         pop1_g1 = list(self.populations[0].groups.keys())[0]
         pop1_g2 = list(self.populations[0].groups.keys())[1]
-        dg1 = self.populations[0].groups[pop1_g1] * self.populations[0].groups[pop1_g2] * (pop1_group_fitnesses[pop1_g1] - pop1_group_fitnesses[pop1_g2])
-        self.populations[0].groups[pop1_g1] += (dg1 * config.timestep)
-        self.populations[0].groups[pop1_g2] -= (dg1 * config.timestep)
+        dg1 = self.populations[0].groups[pop1_g1] * self.populations[0].groups[pop1_g2] * (
+                    pop1_group_fitnesses[pop1_g1] - pop1_group_fitnesses[pop1_g2]) * config.timestep
+        self.populations[0].groups[pop1_g1] += dg1
+        self.populations[0].groups[pop1_g2] -= dg1
 
         pop2_g1 = list(self.populations[1].groups.keys())[0]
         pop2_g2 = list(self.populations[1].groups.keys())[1]
-        dg1 = self.populations[1].groups[pop2_g1] * self.populations[1].groups[pop2_g2] * (pop2_group_fitnesses[pop2_g1] - pop2_group_fitnesses[pop2_g2])
-        self.populations[1].groups[pop2_g1] += (dg1 * config.timestep)
-        self.populations[1].groups[pop2_g2] -= (dg1 * config.timestep)
+        dg1 = self.populations[1].groups[pop2_g1] * self.populations[1].groups[pop2_g2] * (
+                    pop2_group_fitnesses[pop2_g1] - pop2_group_fitnesses[pop2_g2]) * config.timestep
+        self.populations[1].groups[pop2_g1] += dg1
+        self.populations[1].groups[pop2_g2] -= dg1
 
         return populations
 
@@ -61,7 +64,6 @@ class Replicator:
 
 
 if __name__ == "__main__":
-
     import PayoffMatrix
 
     matrix = dict()
