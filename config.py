@@ -37,5 +37,5 @@ partner_groups = {
 }
 
 # Simulation parameters
-iterations = 50000
-timestep = 1.0 / 2000
+iterations = 100000
+timestep = 1.0 / 1000

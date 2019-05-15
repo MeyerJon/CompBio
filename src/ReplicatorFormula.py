@@ -36,61 +36,20 @@ class Replicator:
         pop2_group_fitnesses = dict()
         for group in self.populations[1].groups.keys():
             pop2_group_fitnesses[group] = self.fitness_function(1, group)
-        #####################
-        #pop1_g1 = list(self.populations[0].groups.keys())[0]
-        #pop1_g2 = list(self.populations[0].groups.keys())[1]
-        #dg1 = self.populations[0].groups[pop1_g1] * self.populations[0].groups[pop1_g2] * (
-        #        pop1_group_fitnesses[pop1_g1] - pop1_group_fitnesses[pop1_g2]) * config.timestep
-        #self.populations[0].groups[pop1_g1] += dg1
-        #self.populations[0].groups[pop1_g2] -= dg1
-        #####################
-        pop1_groups = list(self.populations[0].groups.keys())
-        dg1_map = dict()
 
-        dg1_size = 1
-        # For every strategy, calc the change in pop size thingy
-        for group in pop1_groups:
-            dg1_size *= self.populations[0].groups[group]
-        for group in pop1_groups:
-            dg = pop1_group_fitnesses[group]
+        pop1_g1 = list(self.populations[0].groups.keys())[0]
+        pop1_g2 = list(self.populations[0].groups.keys())[1]
+        dg1 = self.populations[0].groups[pop1_g1] * self.populations[0].groups[pop1_g2] * (
+                pop1_group_fitnesses[pop1_g1] - pop1_group_fitnesses[pop1_g2]) * config.timestep
+        self.populations[0].groups[pop1_g1] += dg1
+        self.populations[0].groups[pop1_g2] -= dg1
 
-            for group2 in pop1_groups:
-                if group == group2:
-                    continue
-                dg -= pop1_group_fitnesses[group2]
-
-            dg1_map[group] = dg * dg1_size
-
-        for group in pop1_groups:
-            self.populations[0].groups[group] += dg1_map[group] * config.timestep
-
-        #####################
-        #pop2_g1 = list(self.populations[1].groups.keys())[0]
-        #pop2_g2 = list(self.populations[1].groups.keys())[1]
-        #dg1 = self.populations[1].groups[pop2_g1] * self.populations[1].groups[pop2_g2] * (
-        #        pop2_group_fitnesses[pop2_g1] - pop2_group_fitnesses[pop2_g2]) * config.timestep
-        #self.populations[1].groups[pop2_g1] += dg1
-        #self.populations[1].groups[pop2_g2] -= dg1
-
-        pop2_groups = list(self.populations[1].groups.keys())
-        dg2_map = dict()
-
-        dg2_size = 1
-        # For every strategy, calc the change in pop size thingy
-        for group in pop2_groups:
-            dg2_size *= self.populations[1].groups[group]
-        for group in pop2_groups:
-            dg = pop2_group_fitnesses[group]
-
-            for group2 in pop2_groups:
-                if group == group2:
-                    continue
-                dg -= pop2_group_fitnesses[group2]
-
-            dg2_map[group] = dg * dg2_size
-
-        for group in pop2_groups:
-            self.populations[1].groups[group] += dg2_map[group] * config.timestep
+        pop2_g1 = list(self.populations[1].groups.keys())[0]
+        pop2_g2 = list(self.populations[1].groups.keys())[1]
+        dg1 = self.populations[1].groups[pop2_g1] * self.populations[1].groups[pop2_g2] * (
+                pop2_group_fitnesses[pop2_g1] - pop2_group_fitnesses[pop2_g2]) * config.timestep
+        self.populations[1].groups[pop2_g1] += dg1
+        self.populations[1].groups[pop2_g2] -= dg1
 
         return populations
 
