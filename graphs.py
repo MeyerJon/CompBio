@@ -158,11 +158,88 @@ def population_dynamic(repl):
     plt.clf()
 
 
+def get_repl2():
+    # Payoff Matrix
+    matrix = dict()
+
+    matrix[('m', 'D')] = ((config.b - config.z), (config.B / (1 + config.r)))
+    matrix[('m', 'G1')] = ((config.b - config.z), config.B)
+    matrix[('m', 'G2')] = ((config.b - config.z), config.B)
+    matrix[('c1', 'D')] = ((config.b / (1 + (config.alpha * config.r))), (-config.K / (1 + (config.beta * config.r))))
+    matrix[('c1', 'G1')] = (config.b, -config.K)
+    matrix[('c1', 'G2')] = (config.b, -config.K)
+    matrix[('c2', 'D')] = ((config.b / (1 + (config.alpha * config.r))), (-config.K / (1 + (config.beta * config.r))))
+    matrix[('c2', 'G1')] = (config.b, -config.K)
+    matrix[('c2', 'G2')] = (config.b, -config.K)
+    # Groups
+    m_osc = 0.45  # (beta * K * (1 + r)) / ((B * (1 + beta * r)) + (beta * K * (1 + r)))
+    D_osc = 0.45  # (z / b) * ((1 + alpha * r) / (alpha * r))
+    host_groups = {
+        "D": D_osc + 0.05,
+        "G1": (1 - D_osc - 0.05) / 2,
+        "G2": (1 - D_osc - 0.05) / 2
+    }
+
+    partner_groups = {
+        "m": m_osc + 0.05,
+        "c1": (1 - m_osc - 0.05) / 2,
+        "c2": (1 - m_osc - 0.05) / 2
+    }
+
+    pm = PayoffMatrix.PayoffMatrix(host_groups.keys(), partner_groups.keys(), copy.deepcopy(matrix))
+
+    host = ReplicatorFormula.Population("Host", copy.deepcopy(host_groups))
+    partner = ReplicatorFormula.Population("Partner", copy.deepcopy(partner_groups))
+
+    repl = ReplicatorFormula.Replicator(pm, [partner, host])
+
+    return repl
+
+def population_dynamic2(repl):
+    """
+        Plots discriminators vs cheaters over time
+    """
+
+    x = np.linspace(0, config.timestep * config.iterations, config.iterations)
+    y_c = [repl.populations[0].groups["c1"]]
+    y_m = [repl.populations[0].groups["m"]]
+    y_D = [repl.populations[1].groups["D"]]
+    y_G = [repl.populations[1].groups["G1"]]
+
+    d_m = []
+    d_D = []
+
+    m_osc = (config.beta * config.K * (1 + config.r)) / ((config.B * (1 + config.beta * config.r)) + (config.beta * config.K * (1 + config.r)))
+    D_osc = (config.z / config.b) * ((1 + config.alpha * config.r) / (config.alpha * config.r))
+    m_line = [m_osc] * config.iterations
+    D_line = [D_osc] * config.iterations
+
+
+    prev_m = repl.populations[0].groups["m"]
+    prev_D = repl.populations[1].groups["D"]
+    for _ in range(config.iterations-1):
+        repl.populations = repl.calculate_one_step(repl.populations)
+        y_c.append(repl.populations[0].groups["c1"])
+        y_D.append(repl.populations[1].groups["D"])
+        y_m.append(repl.populations[0].groups["m"])
+        y_G.append(repl.populations[1].groups["G1"])
+
+
+
+
+    plt.plot(x, y_m, x, y_D, x, m_line, x, D_line)
+    plt.legend(["Mutualists", "Discriminators", "Isocline m", "Isocline D"])
+    #plt.show()
+    plt.ylim(0, 1)
+    plt.savefig("pop_dynamic2.svg")
+    plt.clf()
+
 if __name__ == "__main__":
 
-    host_tradeoff(get_repl())
-    host_competition(get_repl())
-    partner_tradeoff(get_repl())
-    partner_competition(get_repl())
+    #host_tradeoff(get_repl())
+    #host_competition(get_repl())
+    #partner_tradeoff(get_repl())
+    #partner_competition(get_repl())
     population_dynamic(get_repl())
+    population_dynamic2(get_repl2())
 

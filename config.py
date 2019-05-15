@@ -15,7 +15,6 @@ alpha = alpha
 beta = beta
 r = r_host_discrimination
 
-
 # Payoff Matrix
 matrix = dict()
 
@@ -24,20 +23,18 @@ matrix[('m', 'G')] = ((b - z), B)
 matrix[('c', 'D')] = ((b / (1 + (alpha * r))), (-K / (1 + (beta * r))))
 matrix[('c', 'G')] = (b, -K)
 
-
 # Groups
-m_osc = (beta * K * (1 + r)) / ((B * (1 + beta * r)) + (beta * K * (1 + r)))
-D_osc = (z / b) * ((1 + alpha * r) / (alpha * r))
+m_osc = 0.45  # (beta * K * (1 + r)) / ((B * (1 + beta * r)) + (beta * K * (1 + r)))
+D_osc = 0.45  # (z / b) * ((1 + alpha * r) / (alpha * r))
 host_groups = {
-                "D": D_osc + 0.05,
-                "G": 1 - D_osc - 0.05
-              }
+    "D": D_osc + 0.05,
+    "G": 1 - D_osc - 0.05
+}
 
 partner_groups = {
-                    "m": m_osc + 0.05,
-                    "c": 1 - m_osc - 0.05
-                 }
-
+    "m": m_osc + 0.05,
+    "c": 1 - m_osc - 0.05
+}
 
 # Simulation parameters
 iterations = 50000
