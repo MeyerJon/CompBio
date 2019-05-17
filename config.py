@@ -23,19 +23,19 @@ matrix[('m', 'G')] = ((b - z), B)
 matrix[('c', 'D')] = ((b / (1 + (alpha * r))), (-K / (1 + (beta * r))))
 matrix[('c', 'G')] = (b, -K)
 
-# Groups
-m_osc = 0.45  # (beta * K * (1 + r)) / ((B * (1 + beta * r)) + (beta * K * (1 + r)))
-D_osc = 0.45  # (z / b) * ((1 + alpha * r) / (alpha * r))
-host_groups = {
+# Populations
+m_osc = 0.45#(beta * K * (1 + r)) / ((B * (1 + beta * r)) + (beta * K * (1 + r)))
+D_osc = 0.45#(z / b) * ((1 + alpha * r) / (alpha * r))
+host_population = {
     "D": D_osc + 0.05,
     "G": 1 - D_osc - 0.05
 }
 
-partner_groups = {
+partner_population = {
     "m": m_osc + 0.05,
     "c": 1 - m_osc - 0.05
 }
 
 # Simulation parameters
-iterations = 100000
-timestep = 1.0 / 1000
+days = 100
+timestep = 1.0 / 10000

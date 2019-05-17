@@ -1,4 +1,5 @@
 from src import PayoffMatrix, ReplicatorFormula
+import graphs
 import config
 
 if __name__ == "__main__":
@@ -6,16 +7,15 @@ if __name__ == "__main__":
     # Payoff matrix as given in Bever, J.
     # Row = Host; Column = Partner
 
-    pm = PayoffMatrix.PayoffMatrix(config.host_groups.keys(), config.partner_groups.keys(), config.matrix)
+    pm = PayoffMatrix.PayoffMatrix(config.host_population.keys(), config.partner_population.keys(), config.matrix)
 
-    host = ReplicatorFormula.Population("Host", config.host_groups)
-    partner = ReplicatorFormula.Population("Partner", config.partner_groups)
+    host = ReplicatorFormula.Population("Host", config.host_population)
+    partner = ReplicatorFormula.Population("Partner", config.partner_population)
 
     repl = ReplicatorFormula.Replicator(pm, [partner, host])
 
-    repl.calculate_steps(config.timesteps)
 
-    print("Partner: {}".format(repl.populations[0].groups))
-    print("Host: {}".format(repl.populations[1].groups))  
+    # Runs a simulation and plots for the example configuration
+    graphs.population_dynamic(repl)
     
 
